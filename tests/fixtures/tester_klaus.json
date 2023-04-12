@@ -1,0 +1,117 @@
+{
+  "resourceName": "people/ouPhie1sohsh9laezah4",
+  "names": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "displayName": "Klaus Tester",
+      "familyName": "Tester",
+      "givenName": "Klaus",
+      "displayNameLastFirst": "Tester, Klaus",
+      "unstructuredName": "Klaus Tester",
+      "middleName": "Dieter",
+      "honorificPrefix": "Dr.",
+      "honorificSuffix": "MA"
+    }
+  ],
+  "addresses": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "formattedValue": "Teststraße 18\nHamburg 22765\nGermany",
+      "type": "work",
+      "formattedType": "Work",
+      "poBox": "no work box",
+      "streetAddress": "Teststraße 18",
+      "extendedAddress": "Stiege Stock Tür",
+      "city": "Hamburg",
+      "postalCode": "22765",
+      "region": "Land Hamburg",
+      "country": "Germany",
+      "countryCode": "DE"
+    },
+    {
+      "metadata": {
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "formattedValue": "\u00dcncodingweg 30\nHamburg 22765\nGermany",
+      "type": "home",
+      "formattedType": "Home",
+      "poBox": "no home box",
+      "streetAddress": "\u00dcncodingweg 30",
+      "extendedAddress": "Stock Tür Stiege",
+      "city": "Bremen",
+      "postalCode": "28195",
+      "region": "Land Bremen",
+      "country": "Germany",
+      "countryCode": "DE"
+    }
+  ],
+  "emailAddresses": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "value": "klaus.tester@example.com",
+      "type": "home",
+      "formattedType": "Home"
+    },
+    {
+      "metadata": {
+        "primary": false,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "value": "k.tester@example.de",
+      "type": "work",
+      "formattedType": "Work"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "value": "+49 40 54637281",
+      "canonicalForm": "+494054637281",
+      "type": "work",
+      "formattedType": "Work"
+    },
+    {
+      "metadata": {
+        "primary": false,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "value": "+49 40 9384756",
+      "canonicalForm": "+49409384756",
+      "type": "home",
+      "formattedType": "Home"
+    }
+  ]
+}

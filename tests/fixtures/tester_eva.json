@@ -1,0 +1,60 @@
+{
+  "resourceName": "people/ahGaPhi9oquoht9eichu",
+  "names": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "Airoh2aapu4keica"
+        }
+      },
+      "displayName": "Eva Tester",
+      "familyName": "Tester",
+      "givenName": "Eva",
+      "displayNameLastFirst": "Tester, Eva",
+      "unstructuredName": "Eva Tester"
+    }
+  ],
+  "emailAddresses": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "Airoh2aapu4keica"
+        }
+      },
+      "value": "eva.tester@example.com",
+      "type": "other",
+      "formattedType": "Other"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "Airoh2aapu4keica"
+        }
+      },
+      "value": "+49 40 12345678",
+      "canonicalForm": "+494012345678",
+      "type": "work",
+      "formattedType": "Work"
+    },
+    {
+      "metadata": {
+        "source": {
+          "type": "CONTACT",
+          "id": "Airoh2aapu4keica"
+        }
+      },
+      "value": "+49 40 87654321",
+      "canonicalForm": "+494087654321",
+      "type": "work",
+      "formattedType": "Work"
+    }
+  ]
+}

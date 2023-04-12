@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gpeopleapiwrapper"
+version = "0.1"
+license = { text = "MIT" }
+authors = [
+    { name = "Martin Holtschneider", email = "code@martin-holtschneider.de" },
+]
+description = "A wrapper around the Google People API"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    'Development Status :: 3 - Alpha',
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: Build Tools',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',]
+dependencies = [
+    "google-api-python-client>=2.84.0",
+    "google_auth_oauthlib>=0.1.0",
+    "ratelimit>=2.2.1"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/holtschn/gpeopleapiwrapper"
+
+[project.optional-dependencies]
+test = [
+    "coverage>=7.2.3",
+    "pylama>=8.4.0",
+]
+publish = [
+    "build>=0.10.0",
+    "twine>=4.0.2"
+]
