@@ -9,6 +9,7 @@ ARG_WRAPPER_CLASS = "wrapper_class"
 
 FIELD_VALUE = "value"
 FIELD_TYPE = "type"
+FIELD_DATE = "date"
 FIELD_FORMATTED_TYPE = "formattedType"
 
 
@@ -188,6 +189,32 @@ class DateValue:
     @staticmethod
     def from_year_only(year: int) -> "DateValue":
         return DateValue(year, None, None)
+
+
+class DateValueMixin:
+    """
+    Mixin class that provides accessors for the "date" attribute of the model object of a :py:class:BaseWrapper.
+    Examples of Person fields with a date are Birthday and Event.
+    """
+
+    @property
+    @abstractmethod
+    def _model_part(self) -> dict:
+        """
+        Method definition that enforces the use of the DateValueMixin with a :py:class:BaseWrapper.
+        """
+        pass
+
+    @property
+    def date_value(self) -> DateValue:
+        google_date = self._model_part.get(FIELD_DATE, None)
+        return DateValue(google_date.get("year", None),
+                         google_date.get("month", None),
+                         google_date.get("day", None))
+
+    @date_value.setter
+    def date_value(self, date_value: DateValue):
+        self._model_part[FIELD_DATE] = date_value.google_value()
 
 
 class StringValueMixin:
@@ -389,6 +416,58 @@ class BaseListWrapper(Generic[WrapperT], metaclass=ListWrapperMeta):
         all_enumerated = enumerate(self.all())
         remove_suggestion = [index for index, _ in all_enumerated]
         to_remove = remove_strategy.remove_from(all_enumerated, remove_suggestion)
+        self._remove_by_index(to_remove)
+
+
+DateValueWrapperT = TypeVar("DateValueWrapperT", bound=DateValueMixin)
+
+
+class DateValueListMixin(Generic[DateValueWrapperT]):
+    """
+    Mixin for :py:class:BaseListWrapper that contain items that have a date value to provide common methods that deal
+    with the date values.
+    """
+
+    @abstractmethod
+    def _remove_by_index(self, to_remove: List[int]):
+        """
+        Enforces to have an "_remove_by_index" method that is (in all cases) implemented by :py:class:BaseListWrapper.
+        """
+        pass
+
+    @abstractmethod
+    def all(self) -> Iterator[DateValueWrapperT]:
+        """
+        Enforces to have an "all" method that is (in all cases) implemented by the :py:class:BaseListWrapper.
+        """
+        pass
+
+    @abstractmethod
+    def remove(self, remove_strategy: RemoveStrategy[DateValueWrapperT]):
+        """
+        Enforces to have a "remove" method that is (in all cases) implemented by the :py:class:BaseListWrapper.
+        """
+        pass
+
+    def all_values(self) -> Iterator[DateValue]:
+        for item in self.all():
+            yield item.date_value
+
+    def remove_all(self):
+        self.remove(RemoveAllSuggested())
+
+    def remove_by_value(self,
+                        date_value: DateValue,
+                        remove_strategy: RemoveStrategy[DateValueWrapperT] = RemoveAllSuggested()):
+        """
+        Removes all items from the list attribute that have the given value and are subsequently selected by the
+        given :py:class:RemoveStrategy.
+        """
+        all_enumerated = enumerate(self.all())
+        remove_suggestion = [index for index, item in all_enumerated if item.date_value == date_value]
+        to_remove = remove_strategy.remove_from(all_enumerated, remove_suggestion)
+        if not set(to_remove).issubset(set(remove_suggestion)):
+            raise IndexError("Removal of items with other values requested")
         self._remove_by_index(to_remove)
 
 
