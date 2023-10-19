@@ -113,5 +113,21 @@
       "type": "home",
       "formattedType": "Home"
     }
+  ],
+  "birthdays": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "date": {
+        "year": 1935,
+        "month": 6,
+        "day": 16
+      }
+    }
   ]
 }
