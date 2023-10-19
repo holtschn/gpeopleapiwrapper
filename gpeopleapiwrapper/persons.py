@@ -25,7 +25,7 @@ class PersonField(Enum):
     addresses = "addresses"
     # age_ranges = "ageRanges"
     # biographies = "biographies"
-    # birthdays = "birthdays"
+    birthdays = "birthdays"
     # calendar_urls = "calendarUrls"
     # client_data = "clientData"
     # cover_photos = "coverPhotos"
@@ -659,6 +659,42 @@ class AddressesWrapper(BaseListWrapper[AddressWrapper], TypeListMixin[AddressWra
         return self
 
 
+class BirthdayWrapper(BaseWrapper, DateValueMixin):
+    """
+    Implementation of the :py:class:BaseWrapper for a single birthday object. For descriptions of the attributes
+    see https://developers.google.com/people/api/rest/v1/people#birthday
+    Each :py:class:PersonWrapper can contain multiple birthdays in a :py:class:BirthdaysWrapper.
+    """
+    pass
+
+
+class BirthdaysWrapper(BaseListWrapper[BirthdayWrapper],
+                       DateValueListMixin[BirthdayWrapper],
+                       metaclass=ListWrapperMeta, wrapper_class=BirthdayWrapper):
+    """
+    Implementation of the :py:class:BaseListWrapper for the birthday attribute of the :py:class:PersonWrapper.
+    This list wrapper contains a list of :py:class:BirthdayWrapper.
+    """
+
+    def append_birthday(self, date_value: DateValue) -> "BirthdaysWrapper":
+        """
+        Appends a new birthday to the list.
+        """
+        self._append_to_model({
+            FIELD_DATE: date_value.google_value()
+        })
+        return self
+
+    def replace_birthday(self, date_value: DateValue) -> "BirthdaysWrapper":
+        """
+        Sets the birthday to the given date_value. If the list is empty, a new birthday is appended. If the list is
+        non-empty, all current elements are discarded.
+        """
+        self.remove_all()
+        self.append_birthday(date_value)
+        return self
+
+
 class EmailAddressWrapper(BaseWrapper, TypeMixin, StringValueMixin):
     """
     Implementation of the :py:class:BaseWrapper for a single email object. For descriptions of the attributes
@@ -915,6 +951,12 @@ class PersonWrapper(ModelWrapper[PersonField]):
         return AddressesWrapper(
             self._model_field(PersonField.addresses),
             self._creation_callback(PersonField.addresses, []))
+
+    @property
+    def birthdays(self) -> BirthdaysWrapper:
+        return BirthdaysWrapper(
+            self._model_field(PersonField.birthdays),
+            self._creation_callback(PersonField.birthdays, []))
 
     @property
     def email_addresses(self) -> EmailAddressesWrapper:
