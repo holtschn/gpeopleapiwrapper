@@ -126,3 +126,8 @@ class TestPersonWrapperBase(FixtureMixin, unittest.TestCase):
     def test_read_is_not_a_change(self):
         person = TestPersonWrapperBase.read_fixture_tester_eva()
         self.assertFalse(person.has_changes())
+
+    def test_fail_on_creation_of_not_included_attributes(self):
+        person = TestPersonWrapperBase.read_fixture_tester_blank_name_field_only()
+        with self.assertRaises(base.FieldNotInMaskError):
+            fail = person.email_addresses.append_email_address("HOME", "test@example.com")
