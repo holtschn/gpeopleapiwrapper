@@ -636,7 +636,7 @@ class AddressesWrapper(BaseListWrapper[AddressWrapper], TypeListMixin[AddressWra
     wrapper contains a list of :py:class:AddressWrapper.
     """
 
-    def append_address(self, address_type: str, city: str):
+    def append_address(self, address_type: str, city: str) -> "AddressesWrapper":
         """
         Appends a new address to the list of addresses. The minimal information required is the city which is a
         reasonable but arbitrary choice. After appending the new address, the :py:class:AddressWrapper is returned and
@@ -667,7 +667,7 @@ class EmailAddressesWrapper(BaseListWrapper[EmailAddressWrapper],
     This list wrapper contains a list of :py:class:EmailAddressWrapper.
     """
 
-    def append_email_address(self, address_type: str, address_value: str):
+    def append_email_address(self, address_type: str, address_value: str) -> "EmailAddressesWrapper":
         """
         Appends a new email address to the list. The minimal information required is the string value, i.e. the email.
         """
@@ -857,7 +857,7 @@ class PhoneNumberWrapper(BaseWrapper, TypeMixin, StringValueMixin):
     """
 
     @property
-    def value_canonical_form(self):
+    def value_canonical_form(self) -> str:
         return self._model_part.get("canonicalForm", "")
 
 
@@ -870,7 +870,7 @@ class PhoneNumbersWrapper(BaseListWrapper[PhoneNumberWrapper],
     This list wrapper contains a list of :py:class:PhoneNumberWrapper.
     """
 
-    def append_phone_number(self, number_type: str, number_value: str):
+    def append_phone_number(self, number_type: str, number_value: str) -> "PhoneNumbersWrapper":
         """
         Appends a new phone number to the list. The minimal information required is the string value, i.e. the number.
         """
