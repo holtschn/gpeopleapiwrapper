@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
+from datetime import date, datetime
 from enum import Enum
-from typing import List, Iterator, TypeVar, Generic, Optional, Callable, Tuple
+from typing import List, Iterator, TypeVar, Generic, Optional, Callable, Tuple, Dict
 
 from gpeopleapiwrapper.base import ModelWrapper
 
@@ -76,6 +77,117 @@ class BaseWrapper:
         Access to the underlying model that is part of the full model of a :py:class:PersonWrapper.
         """
         return self.__part_of_person_model
+
+
+class DateValueVisitor(metaclass=ABCMeta):
+    """
+    Provides none-safe access to :py:class:DateValue.
+    As DateValues come with different levels of  none-ness, i.e. year and month only (for contract expiration dates) or
+    day and month only (for anniversaries), we provide a visitor to handle the different cases.
+    """
+
+    @abstractmethod
+    def visit_full_date(self, full_date: date):
+        pass
+
+    @abstractmethod
+    def visit_without_year(self, month: int, day: int):
+        pass
+
+    @abstractmethod
+    def visit_year_only(self, year: int):
+        pass
+
+    @abstractmethod
+    def visit_without_day(self, year: int, month: int):
+        pass
+
+
+class DateValue:
+    """
+    Representation of a date value in the Google People API.
+    Mainly provides equality, access to the underlying possibly incomplete value by invitation of
+    a :py:class:DateValueVisitor, and static factory methods.
+    """
+
+    def __init__(self, year: Optional[int], month: Optional[int], day: Optional[int]):
+        self.__year = year
+        self.__month = month
+        self.__day = day
+
+    def __eq__(self, other) -> bool:
+
+        if other is None:
+            return False
+        if not isinstance(other, DateValue):
+            return False
+
+        if self.__year is None and other.__year is not None:
+            return False
+        if self.__year is not None and other.__year is None:
+            return False
+        if self.__year != other.__year:
+            return False
+
+        if self.__month is None and other.__month is not None:
+            return False
+        if self.__month is not None and other.__month is None:
+            return False
+        if self.__month != other.__month:
+            return False
+
+        if self.__day is None and other.__day is not None:
+            return False
+        if self.__day is not None and other.__day is None:
+            return False
+        if self.__day != other.__day:
+            return False
+
+        return True
+
+    def __hash__(self) -> int:
+        return self.__day if self.__day else self.__year if self.__year else 0
+
+    def visit_value(self, visitor: DateValueVisitor):
+        if self.__year and self.__month and self.__day:
+            visitor.visit_full_date(date(self.__year, self.__month, self.__day))
+        elif self.__year and self.__month:
+            visitor.visit_without_day(self.__year, self.__month)
+        elif self.__month and self.__day:
+            visitor.visit_without_year(self.__month, self.__day)
+        elif self.__year:
+            visitor.visit_year_only(self.__year)
+
+    def google_value(self) -> Dict[str, int]:
+        google_date = dict()
+        google_date["year"] = self.__year if self.__year else 0
+        google_date["month"] = self.__month if self.__month else 0
+        google_date["day"] = self.__day if self.__day else 0
+        return google_date
+
+    @staticmethod
+    def from_date(date_value: date) -> "DateValue":
+        return DateValue(date_value.year, date_value.month, date_value.day)
+
+    @staticmethod
+    def from_datetime(datetime_value: datetime) -> "DateValue":
+        return DateValue(datetime_value.year, datetime_value.month, datetime_value.day)
+
+    @staticmethod
+    def from_full_date(year: int, month: int, day: int) -> "DateValue":
+        return DateValue(year, month, day)
+
+    @staticmethod
+    def from_year_month(year: int, month: int) -> "DateValue":
+        return DateValue(year, month, None)
+
+    @staticmethod
+    def from_month_day(month: int, day: int) -> "DateValue":
+        return DateValue(None, month, day)
+
+    @staticmethod
+    def from_year_only(year: int) -> "DateValue":
+        return DateValue(year, None, None)
 
 
 class StringValueMixin:
