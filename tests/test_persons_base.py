@@ -6,6 +6,7 @@ from gpeopleapiwrapper import base, persons
 
 
 class FixtureMixin:
+    FULL_FIELD_MASK = [pf for pf in persons.PersonField]
 
     @staticmethod
     def read_fixture(filename: str) -> dict:
@@ -23,45 +24,56 @@ class FixtureMixin:
     @staticmethod
     def read_fixture_tester_klaus() -> persons.PersonWrapper:
         return persons.PersonWrapper(FixtureMixin.read_fixture("tester_klaus.json"),
-                                     [persons.PersonField.names,
-                                      persons.PersonField.addresses,
-                                      persons.PersonField.phone_numbers,
-                                      persons.PersonField.email_addresses
-                                      ])
+                                     FixtureMixin.FULL_FIELD_MASK)
 
     @staticmethod
     def read_fixture_tester_blank() -> persons.PersonWrapper:
         return persons.PersonWrapper(FixtureMixin.read_fixture("tester_blank.json"),
-                                     [persons.PersonField.names,
-                                      persons.PersonField.addresses,
-                                      persons.PersonField.phone_numbers,
-                                      persons.PersonField.email_addresses
-                                      ])
+                                     FixtureMixin.FULL_FIELD_MASK)
+
+    @staticmethod
+    def read_fixture_tester_blank_name_field_only() -> persons.PersonWrapper:
+        return persons.PersonWrapper(FixtureMixin.read_fixture("tester_blank.json"),
+                                     [persons.PersonField.names])
 
 
 class TestPersonWrapperBase(FixtureMixin, unittest.TestCase):
 
     def test_read_fixture_tester_eva(self):
         person = TestPersonWrapperBase.read_fixture_tester_eva()
-        self.assertIsNotNone(person.names)
-        self.assertIsNotNone(person.phone_numbers)
         self.assertIsNotNone(person.email_addresses)
+        self.assertIsNotNone(person.phone_numbers)
+        self.assertIsNotNone(person.names)
         self.assertFalse(person.has_changes())
 
     def test_read_fixture_tester_klaus(self):
         person = TestPersonWrapperBase.read_fixture_tester_klaus()
-        self.assertIsNotNone(person.names)
         self.assertIsNotNone(person.addresses)
-        self.assertIsNotNone(person.phone_numbers)
+        self.assertIsNotNone(person.birthdays)
         self.assertIsNotNone(person.email_addresses)
+        self.assertIsNotNone(person.names)
+        self.assertIsNotNone(person.phone_numbers)
         self.assertFalse(person.has_changes())
 
     def test_read_fixture_tester_blank(self):
         person = TestPersonWrapperBase.read_fixture_tester_blank()
-        self.assertIsNotNone(person.names)
         self.assertIsNotNone(person.addresses)
-        self.assertIsNotNone(person.phone_numbers)
         self.assertIsNotNone(person.email_addresses)
+        self.assertIsNotNone(person.names)
+        self.assertIsNotNone(person.phone_numbers)
+        self.assertFalse(person.has_changes())
+
+    def test_read_fixture_tester_blank_name_field_only(self):
+        person = TestPersonWrapperBase.read_fixture_tester_blank_name_field_only()
+        self.assertIsNotNone(person.names)
+        with self.assertRaises(base.FieldNotInMaskError):
+            fail = person.addresses
+        with self.assertRaises(base.FieldNotInMaskError):
+            fail = person.birthdays
+        with self.assertRaises(base.FieldNotInMaskError):
+            fail = person.email_addresses
+        with self.assertRaises(base.FieldNotInMaskError):
+            fail = person.phone_numbers
         self.assertFalse(person.has_changes())
 
     def test_read_resource_name(self):
