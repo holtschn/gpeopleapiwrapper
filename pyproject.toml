@@ -40,3 +40,10 @@ publish = [
     "build>=0.10.0",
     "twine>=4.0.2"
 ]
+
+[tool.coverage.report]
+# Regexes for lines to exclude from consideration
+exclude_also = [
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+]
