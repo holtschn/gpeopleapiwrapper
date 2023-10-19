@@ -494,9 +494,19 @@ class StringValueListMixin(Generic[StringValueWrapperT]):
         """
         pass
 
+    @abstractmethod
+    def remove(self, remove_strategy: RemoveStrategy[StringValueWrapperT]):
+        """
+        Enforces to have a "remove" method that is (in all cases) implemented by the :py:class:BaseListWrapper.
+        """
+        pass
+
     def all_values(self) -> Iterator[str]:
         for item in self.all():
             yield item.value
+
+    def remove_all(self):
+        self.remove(RemoveAllSuggested())
 
     def remove_by_value(self,
                         value: str,
