@@ -181,6 +181,20 @@ class DateValue:
         return DateValue(datetime_value.year, datetime_value.month, datetime_value.day)
 
     @staticmethod
+    def from_google(google_date: dict) -> "DateValue":
+        year = google_date.get("year", None)
+        if year is not None and year <= 0:
+            year = None
+        month = google_date.get("month", None)
+        if month is not None and month <= 0:
+            month = None
+        day = google_date.get("day", None)
+        if day is not None and day <= 0:
+            day = None
+
+        return DateValue(year, month, day)
+
+    @staticmethod
     def from_full_date(year: int, month: int, day: int) -> "DateValue":
         return DateValue(year, month, day)
 
@@ -214,9 +228,7 @@ class DateValueMixin:
     @property
     def date_value(self) -> DateValue:
         google_date = self._model_part.get(FIELD_DATE, None)
-        return DateValue(google_date.get("year", None),
-                         google_date.get("month", None),
-                         google_date.get("day", None))
+        return DateValue.from_google(google_date) if google_date else None
 
     @date_value.setter
     def date_value(self, date_value: DateValue):
