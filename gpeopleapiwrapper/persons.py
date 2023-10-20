@@ -116,6 +116,12 @@ class DateValue:
         self.__month = month
         self.__day = day
 
+    def __str__(self):
+        return f"DateValue({self.__year}, {self.__month}, {self.__day})"
+
+    def __repr__(self):
+        return self.__str__()
+
     def __eq__(self, other) -> bool:
 
         if other is None:
