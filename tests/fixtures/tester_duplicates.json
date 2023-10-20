@@ -1,0 +1,192 @@
+{
+  "resourceName": "people/ohLoh4see4thaesahSh1",
+  "names": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "displayName": "Julia Mustermann",
+      "familyName": "Mustermann",
+      "givenName": "Julia",
+      "displayNameLastFirst": "Mustermann, Julia",
+      "unstructuredName": "Julia Mustermann"
+    }
+  ],
+  "addresses": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "formattedValue": "ABC-Straße 19\nHamburg 20354\nGermany",
+      "type": "work",
+      "formattedType": "Work",
+      "streetAddress": "ABC-Straße 19",
+      "city": "Hamburg",
+      "postalCode": "20354",
+      "region": "Land Hamburg",
+      "country": "Germany",
+      "countryCode": "DE"
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "formattedValue": "ABC-Straße 19\nHamburg 20354\nGermany",
+      "type": "work",
+      "formattedType": "Work",
+      "streetAddress": "ABC-Straße 19",
+      "city": "Hamburg",
+      "postalCode": "20354",
+      "region": "Land Hamburg",
+      "country": "Germany",
+      "countryCode": "DE"
+    }
+  ],
+  "emailAddresses": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "julia01@example.com",
+      "type": "home",
+      "formattedType": "Home"
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "julia01@example.com",
+      "type": "work",
+      "formattedType": "Work"
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "julia02@example.com",
+      "type": "home",
+      "formattedType": "Home"
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "julia02@example.com",
+      "type": "home",
+      "formattedType": "Home"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "+49 40 54637281",
+      "canonicalForm": "+494054637281",
+      "type": "work",
+      "formattedType": "Work"
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "+49 40 54637281",
+      "canonicalForm": "+494054637281",
+      "type": "work",
+      "formattedType": "Work"
+    },
+    {
+      "metadata": {
+        "primary": false,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "+49 40 9384756",
+      "canonicalForm": "+49409384756",
+      "type": "home",
+      "formattedType": "Home"
+    }
+  ],
+  "birthdays": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "date": {
+        "year": 1935,
+        "month": 6,
+        "day": 16
+      }
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "date": {
+        "year": 1935,
+        "month": 7,
+        "day": 16
+      }
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "date": {
+        "year": 1935,
+        "month": 6,
+        "day": 16
+      }
+    }
+  ]
+}

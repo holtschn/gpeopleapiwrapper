@@ -43,18 +43,6 @@
       "canonicalForm": "+494012345678",
       "type": "work",
       "formattedType": "Work"
-    },
-    {
-      "metadata": {
-        "source": {
-          "type": "CONTACT",
-          "id": "Airoh2aapu4keica"
-        }
-      },
-      "value": "+49 40 87654321",
-      "canonicalForm": "+494087654321",
-      "type": "work",
-      "formattedType": "Work"
     }
   ]
 }

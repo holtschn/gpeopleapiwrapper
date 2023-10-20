@@ -13,7 +13,7 @@
       "familyName": "Tester",
       "givenName": "Klaus",
       "displayNameLastFirst": "Tester, Klaus",
-      "unstructuredName": "Klaus Tester",
+      "unstructuredName": "Klaus Dieter Tester",
       "middleName": "Dieter",
       "honorificPrefix": "Dr.",
       "honorificSuffix": "MA"
@@ -81,7 +81,7 @@
           "id": "loo0Ohchaewaiyah"
         }
       },
-      "value": "k.tester@example.de",
+      "value": "k.tester@company.de",
       "type": "work",
       "formattedType": "Work"
     }
