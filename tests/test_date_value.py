@@ -68,6 +68,23 @@ class TestDateValue(unittest.TestCase):
         self.assertEqual(0, google_value["month"])
         self.assertEqual(0, google_value["day"])
 
+    def test_non_object_str_and_repr(self):
+        date_value = persons.DateValue.from_full_date(1998, 10, 15)
+
+        self.assertTrue("1998" in str(date_value))
+        self.assertTrue("10" in str(date_value))
+        self.assertTrue("15" in str(date_value))
+
+        self.assertFalse("<" in str(date_value))
+        self.assertFalse(">" in str(date_value))
+
+        self.assertTrue("1998" in repr(date_value))
+        self.assertTrue("10" in repr(date_value))
+        self.assertTrue("15" in repr(date_value))
+
+        self.assertFalse("<" in repr(date_value))
+        self.assertFalse(">" in repr(date_value))
+
     def test_equality_full_date(self):
         left_date = persons.DateValue.from_full_date(2019, 3, 17)
         right_date = persons.DateValue.from_full_date(2019, 3, 17)
