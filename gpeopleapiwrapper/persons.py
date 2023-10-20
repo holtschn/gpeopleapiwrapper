@@ -30,7 +30,7 @@ class PersonField(Enum):
     # client_data = "clientData"
     # cover_photos = "coverPhotos"
     email_addresses = "emailAddresses"
-    # events = "events"
+    events = "events"
     # external_ids = "externalIds"
     # genders = "genders"
     # im_clients = "imClients"
@@ -742,6 +742,35 @@ class EmailAddressesWrapper(BaseListWrapper[EmailAddressWrapper],
         return self
 
 
+class EventWrapper(BaseWrapper, TypeMixin, DateValueMixin):
+    """
+    Implementation of the :py:class:BaseWrapper for a single event date. For descriptions of the attributes
+    see https://developers.google.com/people/api/rest/v1/people#event
+    Each :py:class:PersonWrapper can contain multiple email addresses in a :py:class:EventsWrapper.
+    """
+    pass
+
+
+class EventsWrapper(BaseListWrapper[EventWrapper],
+                    StringValueListMixin[EventWrapper],
+                    TypeListMixin[EventWrapper],
+                    metaclass=ListWrapperMeta, wrapper_class=EventWrapper):
+    """
+    Implementation of the :py:class:BaseListWrapper for the events attribute of the :py:class:PersonWrapper.
+    This list wrapper contains a list of :py:class:EventsWrapper.
+    """
+
+    def append_event(self, event_type: str, event_date: str) -> "EventsWrapper":
+        """
+        Appends a new event to the list. The information required are the type and the date of the event.
+        """
+        self._append_to_model({
+            FIELD_TYPE: event_type,
+            FIELD_DATE: event_date
+        })
+        return self
+
+
 class NameWrapper(BaseWrapper):
     """
     Implementation of the :py:class:BaseWrapper for a single name object. For descriptions of the attributes
@@ -981,6 +1010,12 @@ class PersonWrapper(ModelWrapper[PersonField]):
         return EmailAddressesWrapper(
             self._model_field(PersonField.email_addresses),
             self._creation_callback(PersonField.email_addresses, []))
+
+    @property
+    def events(self) -> EventsWrapper:
+        return EventsWrapper(
+            self._model_field(PersonField.events),
+            self._creation_callback(PersonField.events, []))
 
     @property
     def names(self) -> NamesWrapper:
