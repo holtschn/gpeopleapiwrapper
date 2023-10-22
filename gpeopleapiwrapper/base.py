@@ -68,7 +68,9 @@ class ModelWrapper(Generic[FieldT]):
         first. As the model dict is a private attribute of the ModelWrapper we need to create a callback that is used
         to create the initial empty list.
         """
-        if field not in self.__field_mask:
+
+        if field not in self.__field_mask:  # pragma: no cover
+            # this code currently cannot be reached because the field mask is always checked before
             raise FieldNotInMaskError(field, self.__field_mask)
 
         def callback():
