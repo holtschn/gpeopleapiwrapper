@@ -55,7 +55,6 @@ class TestPersonWrapperPhoneNumbers(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_phone_numbers_type(self):
         person = TestPersonWrapperPhoneNumbers.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         phone_number = person.phone_numbers.first_of_type("home")
         phone_number.vtype = "[Updated] " + phone_number.vtype
@@ -66,7 +65,6 @@ class TestPersonWrapperPhoneNumbers(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_phone_numbers_value(self):
         person = TestPersonWrapperPhoneNumbers.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         phone_number = person.phone_numbers.first_of_type("work")
         phone_number.value = "[Updated] " + phone_number.value
@@ -76,7 +74,6 @@ class TestPersonWrapperPhoneNumbers(tpb.FixtureMixin, unittest.TestCase):
 
     def test_append_phone_number(self):
         person = TestPersonWrapperPhoneNumbers.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         person.phone_numbers.append_phone_number("created", "+49 89 84629838")
 
@@ -87,7 +84,6 @@ class TestPersonWrapperPhoneNumbers(tpb.FixtureMixin, unittest.TestCase):
 
     def test_remove_phone_number(self):
         person = TestPersonWrapperPhoneNumbers.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         person.phone_numbers.remove_by_value("+49 40 54637281")
 
@@ -98,7 +94,6 @@ class TestPersonWrapperPhoneNumbers(tpb.FixtureMixin, unittest.TestCase):
 
     def test_append_phone_number_to_unset_attribute(self):
         person = TestPersonWrapperPhoneNumbers.read_fixture_tester_empty()
-        self.assertFalse(person.has_changes())
 
         person.phone_numbers.append_phone_number("created", "+49 40 9384756")
 

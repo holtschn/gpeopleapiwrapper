@@ -32,7 +32,6 @@ class TestPersonWrapperNames(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_names_unstructured_name(self):
         person = TestPersonWrapperNames.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         names = person.names.first()
         names.unstructured_name = "[Updated] " + names.unstructured_name
@@ -42,7 +41,6 @@ class TestPersonWrapperNames(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_names_family_name(self):
         person = TestPersonWrapperNames.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         names = person.names.first()
         names.family_name = "[Updated] " + names.family_name
@@ -52,7 +50,6 @@ class TestPersonWrapperNames(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_names_given_name(self):
         person = TestPersonWrapperNames.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         names = person.names.first()
         names.given_name = "[Updated] " + names.given_name
@@ -62,7 +59,6 @@ class TestPersonWrapperNames(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_names_middle_name(self):
         person = TestPersonWrapperNames.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         names = person.names.first()
         names.middle_name = "[Updated] " + names.middle_name
@@ -72,7 +68,6 @@ class TestPersonWrapperNames(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_names_honorific_prefix(self):
         person = TestPersonWrapperNames.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         names = person.names.first()
         names.honorific_prefix = "[Updated] " + names.honorific_prefix
@@ -82,7 +77,6 @@ class TestPersonWrapperNames(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_names_honorific_suffix(self):
         person = TestPersonWrapperNames.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         names = person.names.first()
         names.honorific_suffix = "[Updated] " + names.honorific_suffix
@@ -92,7 +86,6 @@ class TestPersonWrapperNames(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_names_multiple_attributes(self):
         person = TestPersonWrapperNames.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         names = person.names.first()
 

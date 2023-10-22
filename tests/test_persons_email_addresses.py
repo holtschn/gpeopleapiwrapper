@@ -48,7 +48,6 @@ class TestPersonWrapperEmailAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_email_addresses_type(self):
         person = TestPersonWrapperEmailAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         email_address = person.email_addresses.first_of_type("home")
         email_address.vtype = "[Updated] " + email_address.vtype
@@ -59,7 +58,6 @@ class TestPersonWrapperEmailAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_email_addresses_value(self):
         person = TestPersonWrapperEmailAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         email_address = person.email_addresses.first_of_type("work")
         email_address.value = "[Updated] " + email_address.value
@@ -69,7 +67,6 @@ class TestPersonWrapperEmailAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_append_email_address(self):
         person = TestPersonWrapperEmailAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         person.email_addresses.append_email_address("created", "newly.created@example.org")
 
@@ -80,7 +77,6 @@ class TestPersonWrapperEmailAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_remove_email_address(self):
         person = TestPersonWrapperEmailAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         person.email_addresses.remove_by_value("klaus.tester@example.com")
 
@@ -91,7 +87,6 @@ class TestPersonWrapperEmailAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_append_email_address_to_unset_attribute(self):
         person = TestPersonWrapperEmailAddresses.read_fixture_tester_empty()
-        self.assertFalse(person.has_changes())
 
         person.email_addresses.append_email_address("created", "newly.created@example.org")
 

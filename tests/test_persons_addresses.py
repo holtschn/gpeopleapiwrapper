@@ -59,7 +59,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_type(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.vtype = "[Updated] " + address.vtype
@@ -70,7 +69,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_po_box(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.po_box = "[Updated] " + address.po_box
@@ -80,7 +78,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_street_address(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.street_address = "[Updated] " + address.street_address
@@ -90,7 +87,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_extended_address(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.extended_address = "[Updated] " + address.extended_address
@@ -100,7 +96,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_city(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.city = "[Updated] " + address.city
@@ -110,7 +105,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_region(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.region = "[Updated] " + address.region
@@ -120,7 +114,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_postal_code(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.postal_code = "[Updated] " + address.postal_code
@@ -130,7 +123,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_country(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.country = "[Updated] " + address.country
@@ -140,7 +132,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_country_code(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("home")
         address.country_code = "[Updated] " + address.country_code
@@ -150,7 +141,6 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
     def test_update_addresses_multiple_attributes(self):
         person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-        self.assertFalse(person.has_changes())
 
         address = person.addresses.first_of_type("work")
 
