@@ -112,9 +112,30 @@ class DateValue:
     """
 
     def __init__(self, year: Optional[int], month: Optional[int], day: Optional[int]):
-        self.__year = year
-        self.__month = month
-        self.__day = day
+        self.__year = DateValue.__check_year_range(year)
+        self.__month = DateValue.__check_month_range(month)
+        self.__day = DateValue.__check_day_range(day)
+
+    @staticmethod
+    def __check_year_range(year: Optional[int]) -> Optional[int]:
+        if year is not None:
+            if year <= 0:
+                raise ValueError("Year must be greater than 0")
+        return year
+
+    @staticmethod
+    def __check_month_range(month: Optional[int]) -> Optional[int]:
+        if month is not None:
+            if month < 1 or month > 12:
+                raise ValueError("Month must be between 1 and 12")
+        return month
+
+    @staticmethod
+    def __check_day_range(day: Optional[int]) -> Optional[int]:
+        if day is not None:
+            if day < 1 or day > 31:
+                raise ValueError("Day must be between 1 and 31")
+        return day
 
     def __str__(self):
         return f"DateValue({self.__year}, {self.__month}, {self.__day})"
