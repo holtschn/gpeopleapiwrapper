@@ -68,6 +68,83 @@ class TestDateValue(unittest.TestCase):
         self.assertEqual(0, google_value["month"])
         self.assertEqual(0, google_value["day"])
 
+    def test_create_from_google(self):
+        google_value = {
+            "year": 2023,
+            "month": 10,
+            "day": 15
+        }
+        date_value = persons.DateValue.from_google(google_value)
+        self.assertIsNotNone(date_value)
+        self.assertEqual(google_value, date_value.google_value())
+
+    def test_create_from_google_no_year(self):
+        google_value = {
+            "year": 0,
+            "month": 10,
+            "day": 15
+        }
+        date_value = persons.DateValue.from_google(google_value)
+        self.assertIsNotNone(date_value)
+        self.assertEqual(google_value, date_value.google_value())
+
+    def test_create_from_google_no_day(self):
+        google_value = {
+            "year": 2018,
+            "month": 10,
+            "day": 0
+        }
+        date_value = persons.DateValue.from_google(google_value)
+        self.assertIsNotNone(date_value)
+        self.assertEqual(google_value, date_value.google_value())
+
+    def test_create_from_google_year_only(self):
+        google_value = {
+            "year": 2018,
+            "month": 0,
+            "day": 0
+        }
+        date_value = persons.DateValue.from_google(google_value)
+        self.assertIsNotNone(date_value)
+        self.assertEqual(google_value, date_value.google_value())
+
+    def test_create_fail_on_invalid_input(self):
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_full_date(2023, 13, 15)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_full_date(2023, 10, 32)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_full_date(2023, 13, 0)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_full_date(2023, 0, 17)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_full_date(0, 10, 11)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_month_day(13, 15)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_month_day(0, 15)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_month_day(10, 32)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_month_day(10, 0)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_year_month(2023, 13)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_year_month(0, 4)
+
+        with self.assertRaises(ValueError):
+            persons.DateValue.from_year_month(2023, 0)
+
     def test_non_object_str_and_repr(self):
         date_value = persons.DateValue.from_full_date(1998, 10, 15)
 
