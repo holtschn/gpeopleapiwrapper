@@ -129,5 +129,23 @@
         "day": 16
       }
     }
+  ],
+  "events": [
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "loo0Ohchaewaiyah"
+        }
+      },
+      "date": {
+        "year": 1966,
+        "month": 6,
+        "day": 16
+      },
+      "type": "wedding",
+      "formattedType": "Wedding"
+    }
   ]
 }
