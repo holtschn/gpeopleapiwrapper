@@ -117,13 +117,10 @@ class TestPersonWrapperBirthdays(tpb.FixtureMixin, unittest.TestCase):
         self.assertEqual(persons.DateValue.from_full_date(1935, 6, 16), birthdays[1])
 
     def test_replace_birthdays(self):
-        person = TestPersonWrapperBirthdays.read_fixture_tester_duplicates()
-
-        self.assertEqual(3, len(list(person.birthdays.all())))
-        person.birthdays.replace_birthday(tpb.persons.DateValue.from_month_day(9, 17))
-        self.assertEqual(1, len(list(person.birthdays.all())))
-
-        birthday = person.birthdays.first()
-        self.assertIsNotNone(birthday)
-
-        self.assertEqual(persons.DateValue.from_month_day(9, 17), birthday.date_value)
+        person = self.read_fixture_tester_duplicates()
+        replacement_value = persons.DateValue.from_month_day(9, 17)
+        person.birthdays.replace_birthdays_with_single(replacement_value)
+        birthdays = list(person.birthdays.all_values())
+        self.assertIsNotNone(birthdays)
+        self.assertEqual(1, len(birthdays))
+        self.assertTrue(replacement_value in birthdays)

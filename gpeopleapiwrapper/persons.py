@@ -764,7 +764,7 @@ class BirthdaysWrapper(BaseListWrapper[BirthdayWrapper],
         })
         return self
 
-    def replace_birthday(self, date_value: DateValue) -> "BirthdaysWrapper":
+    def replace_birthdays_with_single(self, date_value: DateValue) -> "BirthdaysWrapper":
         """
         Sets the birthday to the given date_value. If the list is empty, a new birthday is appended. If the list is
         non-empty, all current elements are discarded.
