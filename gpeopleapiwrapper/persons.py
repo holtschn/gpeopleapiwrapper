@@ -334,7 +334,7 @@ class ListWrapperMeta(type):
 WrapperT = TypeVar("WrapperT", bound=BaseWrapper)
 
 
-class RemoveStrategy(Generic[WrapperT], metaclass=ABCMeta):
+class RemoveCriterion(Generic[WrapperT], metaclass=ABCMeta):
     """
     Parameter object to specify with items to remove from a list attribute of a :py:class:PersonWrapper.
 
@@ -347,9 +347,31 @@ class RemoveStrategy(Generic[WrapperT], metaclass=ABCMeta):
     While removing all items can be implemented rather easily, the other methods require more effort. We opted for the
     following process:
     1. The list of items to be removed is selected, e.g. all items that match a certain criteria.
-    2. The RemoveStrategy is applied to narrow the list of suggestions down to the items that are actually removed.
-    An example case is the deduplication of email addresses where the first email address is kept and all others are
-    removed, cf. :py:class:RemoveSuggestedExceptFirst
+       This selection is done by the :py:class:RemoveCriterion
+    2. The :py:class:RemoveStrategy is applied after the selection to narrow down the list of suggestions even further,
+       e.g. to remove only the first item of the ones that match the criterion.
+       Another example case is the deduplication of values (email addresses, phone numbers, ...) where the first email
+       address is kept and all others are removed, cf. :py:class:RemoveSuggestedExceptFirst
+    """
+
+    @abstractmethod
+    def suggest_removal(self, wrapper: WrapperT) -> bool:
+        pass
+
+
+class RemoveAllCriterion(Generic[WrapperT], RemoveCriterion[WrapperT]):
+    """
+    Implementation of a :py:class:RemoveCriterion that suggests to remove all items of the list attribute.
+    """
+
+    def suggest_removal(self, wrapper: WrapperT) -> bool:
+        return True
+
+
+class RemoveStrategy(Generic[WrapperT], metaclass=ABCMeta):
+    """
+    Parameter object to select from the suggestion of items to be removed,
+    for a full explanation cf. :py:class:RemoveCriterion.
     """
 
     @abstractmethod
@@ -434,9 +456,25 @@ class BaseListWrapper(Generic[WrapperT], metaclass=ListWrapperMeta):
         """
         to_remove_sorted = sorted(to_remove, reverse=True)
         for index in to_remove_sorted:
-            if index >= len(self.__part_of_person_model):
+            if index >= len(self.__part_of_person_model):  # pragma: no cover
+                # this code currently cannot be reached because we only work with valid indexes in subclasses
                 raise IndexError("index too large on delete")
             del self.__part_of_person_model[index]
+
+    def _remove(self, criterion: RemoveCriterion[WrapperT],
+                remove_strategy: RemoveStrategy[WrapperT] = RemoveAllSuggested()):
+        """
+        Removes all items from the list attribute that match the :py:class:RemoveCriterion and are subsequently
+        selected by the given :py:class:RemoveStrategy.
+        For a full explanation cf. :py:class:RemoveCriterion.
+        """
+        all_enumerated = enumerate(self.all())
+        remove_suggestion = [index for index, item in all_enumerated if criterion.suggest_removal(item)]
+        to_remove = remove_strategy.remove_from(all_enumerated, remove_suggestion)
+        if not set(to_remove).issubset(set(remove_suggestion)):  # pragma: no cover
+            # this code currently cannot be reached because we only work with valid indexes in subclasses
+            raise IndexError("Removal of items with other values requested")
+        self._remove_by_index(to_remove)
 
     def all(self) -> Iterator[WrapperT]:
         if not self.__part_of_person_model:
@@ -447,18 +485,25 @@ class BaseListWrapper(Generic[WrapperT], metaclass=ListWrapperMeta):
     def first(self) -> Optional[WrapperT]:
         return next(self.all(), None)
 
-    def remove(self, remove_strategy: RemoveStrategy[WrapperT]):
-        """
-        Removes items from the list attribute by applying the given :py:class:RemoveStrategy.
-        Caution: Tries to remove all items, i.e. applies no criteria to the values of the items.
-        """
-        all_enumerated = enumerate(self.all())
-        remove_suggestion = [index for index, _ in all_enumerated]
-        to_remove = remove_strategy.remove_from(all_enumerated, remove_suggestion)
-        self._remove_by_index(to_remove)
+    def remove_all(self):
+        self._remove(RemoveAllCriterion(), RemoveAllSuggested())
 
 
 DateValueWrapperT = TypeVar("DateValueWrapperT", bound=DateValueMixin)
+
+
+class RemoveByDateValueCriterion(RemoveCriterion[DateValueWrapperT]):
+    """
+    Implementation of a :py:class:RemoveCriterion that suggests to remove all items of the list attribute that have
+    the given date value,
+    for a full explanation cf. :py:class:RemoveCriterion.
+    """
+
+    def __init__(self, date_value: DateValue):
+        self.__date_value = date_value
+
+    def suggest_removal(self, wrapper: DateValueWrapperT) -> bool:
+        return wrapper.date_value == self.__date_value
 
 
 class DateValueListMixin(Generic[DateValueWrapperT]):
@@ -468,9 +513,10 @@ class DateValueListMixin(Generic[DateValueWrapperT]):
     """
 
     @abstractmethod
-    def _remove_by_index(self, to_remove: List[int]):
+    def _remove(self, criterion: RemoveCriterion[DateValueWrapperT],
+                remove_strategy: RemoveStrategy[DateValueWrapperT]):
         """
-        Enforces to have an "_remove_by_index" method that is (in all cases) implemented by :py:class:BaseListWrapper.
+        Enforces to have an "_remove" method that is (in all cases) implemented by :py:class:BaseListWrapper.
         """
         pass
 
@@ -481,19 +527,9 @@ class DateValueListMixin(Generic[DateValueWrapperT]):
         """
         pass
 
-    @abstractmethod
-    def remove(self, remove_strategy: RemoveStrategy[DateValueWrapperT]):
-        """
-        Enforces to have a "remove" method that is (in all cases) implemented by the :py:class:BaseListWrapper.
-        """
-        pass
-
     def all_values(self) -> Iterator[DateValue]:
         for item in self.all():
             yield item.date_value
-
-    def remove_all(self):
-        self.remove(RemoveAllSuggested())
 
     def remove_by_value(self,
                         date_value: DateValue,
@@ -502,15 +538,24 @@ class DateValueListMixin(Generic[DateValueWrapperT]):
         Removes all items from the list attribute that have the given value and are subsequently selected by the
         given :py:class:RemoveStrategy.
         """
-        all_enumerated = enumerate(self.all())
-        remove_suggestion = [index for index, item in all_enumerated if item.date_value == date_value]
-        to_remove = remove_strategy.remove_from(all_enumerated, remove_suggestion)
-        if not set(to_remove).issubset(set(remove_suggestion)):
-            raise IndexError("Removal of items with other values requested")
-        self._remove_by_index(to_remove)
+        self._remove(RemoveByDateValueCriterion(date_value), remove_strategy)
 
 
 StringValueWrapperT = TypeVar("StringValueWrapperT", bound=StringValueMixin)
+
+
+class RemoveByStringValueCriterion(RemoveCriterion[StringValueWrapperT]):
+    """
+    Implementation of a :py:class:RemoveCriterion that suggests to remove all items of the list attribute that have
+    the given string value,
+    for a full explanation cf. :py:class:RemoveCriterion.
+    """
+
+    def __init__(self, string_value: str):
+        self.__string_value = string_value
+
+    def suggest_removal(self, wrapper: StringValueWrapperT) -> bool:
+        return wrapper.value == self.__string_value
 
 
 class StringValueListMixin(Generic[StringValueWrapperT]):
@@ -520,9 +565,10 @@ class StringValueListMixin(Generic[StringValueWrapperT]):
     """
 
     @abstractmethod
-    def _remove_by_index(self, to_remove: List[int]):
+    def _remove(self, criterion: RemoveCriterion[StringValueWrapperT],
+                remove_strategy: RemoveStrategy[StringValueWrapperT]):
         """
-        Enforces to have an "_remove_by_index" method that is (in all cases) implemented by :py:class:BaseListWrapper.
+        Enforces to have an "_remove" method that is (in all cases) implemented by :py:class:BaseListWrapper.
         """
         pass
 
@@ -533,19 +579,9 @@ class StringValueListMixin(Generic[StringValueWrapperT]):
         """
         pass
 
-    @abstractmethod
-    def remove(self, remove_strategy: RemoveStrategy[StringValueWrapperT]):
-        """
-        Enforces to have a "remove" method that is (in all cases) implemented by the :py:class:BaseListWrapper.
-        """
-        pass
-
     def all_values(self) -> Iterator[str]:
         for item in self.all():
             yield item.value
-
-    def remove_all(self):
-        self.remove(RemoveAllSuggested())
 
     def remove_by_value(self,
                         value: str,
@@ -554,30 +590,39 @@ class StringValueListMixin(Generic[StringValueWrapperT]):
         Removes all items from the list attribute that have the given value and are subsequently selected by the
         given :py:class:RemoveStrategy.
         """
-        all_enumerated = enumerate(self.all())
-        remove_suggestion = [index for index, item in all_enumerated if item.value == value]
-        to_remove = remove_strategy.remove_from(all_enumerated, remove_suggestion)
-        if not set(to_remove).issubset(set(remove_suggestion)):
-            raise IndexError("Removal of items with other values requested")
-        self._remove_by_index(to_remove)
+        self._remove(RemoveByStringValueCriterion(value), remove_strategy)
 
 
 TypeWrapperT = TypeVar("TypeWrapperT", bound=TypeMixin)
 
 
+class RemoveByTypeCriterion(RemoveCriterion[TypeWrapperT]):
+    """
+    Implementation of a :py:class:RemoveCriterion that suggests to remove all items of the list attribute that have
+    the given type,
+    for a full explanation cf. :py:class:RemoveCriterion.
+    """
+
+    def __init__(self, vtype: str):
+        self.__vtype = vtype
+
+    def suggest_removal(self, wrapper: TypeWrapperT) -> bool:
+        return wrapper.vtype == self.__vtype
+
+
 class TypeListMixin(Generic[TypeWrapperT]):
 
     @abstractmethod
-    def _remove_by_index(self, to_remove: List[int]):
+    def _remove(self, criterion: RemoveCriterion[TypeWrapperT], remove_strategy: RemoveStrategy[TypeWrapperT]):
         """
-        Enforces to have an "_remove_by_index" method that is (in all cases) implemented by :py:class:BaseListWrapper.
+        Enforces to have an "_remove" method that is (in all cases) implemented by :py:class:BaseListWrapper.
         """
         pass
 
     @abstractmethod
     def all(self) -> Iterator[TypeWrapperT]:
         """
-        Enforces to have an "_remove_by_index" method that is (in all cases) implemented by :py:class:BaseListWrapper.
+        Enforces to have an "all" method that is (in all cases) implemented by :py:class:BaseListWrapper.
         """
         pass
 
@@ -594,12 +639,7 @@ class TypeListMixin(Generic[TypeWrapperT]):
         Removes all items from the list attribute that have the given type and are subsequently selected by the
         given :py:class:RemoveStrategy.
         """
-        all_enumerated = enumerate(self.all())
-        remove_suggestion = [index for index, item in all_enumerated if item.vtype == vtype]
-        to_remove = remove_strategy.remove_from(all_enumerated, remove_suggestion)
-        if not set(to_remove).issubset(set(remove_suggestion)):
-            raise IndexError("Removal of items with other types requested")
-        self._remove_by_index(to_remove)
+        self._remove(RemoveByTypeCriterion(vtype), remove_strategy)
 
 
 class AddressWrapper(BaseWrapper, TypeMixin):
