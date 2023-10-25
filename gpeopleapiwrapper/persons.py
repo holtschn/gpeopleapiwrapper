@@ -813,7 +813,7 @@ class EventWrapper(BaseWrapper, TypeMixin, DateValueMixin):
 
 
 class EventsWrapper(BaseListWrapper[EventWrapper],
-                    StringValueListMixin[EventWrapper],
+                    DateValueListMixin[EventWrapper],
                     TypeListMixin[EventWrapper],
                     metaclass=ListWrapperMeta, wrapper_class=EventWrapper):
     """
@@ -821,13 +821,13 @@ class EventsWrapper(BaseListWrapper[EventWrapper],
     This list wrapper contains a list of :py:class:EventsWrapper.
     """
 
-    def append_event(self, event_type: str, event_date: str) -> "EventsWrapper":
+    def append_event(self, event_type: str, date_value: DateValue) -> "EventsWrapper":
         """
         Appends a new event to the list. The information required are the type and the date of the event.
         """
         self._append_to_model({
             FIELD_TYPE: event_type,
-            FIELD_DATE: event_date
+            FIELD_DATE: date_value.google_value()
         })
         return self
 
