@@ -143,6 +143,19 @@
       "canonicalForm": "+49409384756",
       "type": "home",
       "formattedType": "Home"
+    },
+    {
+      "metadata": {
+        "primary": true,
+        "source": {
+          "type": "CONTACT",
+          "id": "emoofi0uch4ewaqu"
+        }
+      },
+      "value": "+49 40 54637281",
+      "canonicalForm": "+494054637281",
+      "type": "other",
+      "formattedType": "Other"
     }
   ],
   "birthdays": [
