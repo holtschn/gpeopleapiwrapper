@@ -5,16 +5,14 @@ from tests import test_persons_base as tpb
 
 class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
 
-    def test_read_addresses_attributes(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
+    def test_read_address_attributes(self):
+        person = self.read_fixture_tester_extensive()
 
         addresses = person.addresses
         self.assertIsNotNone(addresses)
-
         self.assertIsNotNone(addresses.all())
         address_list = list(addresses.all())
         self.assertEqual(2, len(address_list))
-
         self.assertIsNotNone(address_list[0].vtype)
         self.assertIsNotNone(address_list[1].vtype)
 
@@ -45,103 +43,86 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
         self.assertEqual("Germany", address_work.country)
         self.assertEqual("DE", address_work.country_code)
 
+        self.assertFalse(person.has_changes())
+
     def test_fail_update_addresses_readonly_formatted(self):
-        address_home = TestPersonWrapperAddresses.read_fixture_tester_extensive().addresses.first_of_type("home")
+        address_home = self.read_fixture_tester_extensive().addresses.first_of_type("home")
         self.assertIsNotNone(address_home)
         with self.assertRaises(AttributeError):
             address_home.formatted = "fail"
 
     def test_fail_update_addresses_readonly_formatted_type(self):
-        address_home = TestPersonWrapperAddresses.read_fixture_tester_extensive().addresses.first_of_type("home")
+        address_home = self.read_fixture_tester_extensive().addresses.first_of_type("home")
         self.assertIsNotNone(address_home)
         with self.assertRaises(AttributeError):
             address_home.formatted_type = "fail"
 
     def test_update_addresses_type(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.vtype = "[Updated] " + address.vtype
         self.assertIsNotNone(person.addresses.first_of_type("[Updated] home"))
         self.assertEqual("[Updated] home", person.addresses.first_of_type("[Updated] home").vtype)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_po_box(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.po_box = "[Updated] " + address.po_box
         self.assertEqual("[Updated] no home box", person.addresses.first_of_type("home").po_box)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_street_address(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.street_address = "[Updated] " + address.street_address
         self.assertEqual("[Updated] Üncodingweg 30", person.addresses.first_of_type("home").street_address)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_extended_address(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.extended_address = "[Updated] " + address.extended_address
         self.assertEqual("[Updated] Stock Tür Stiege", person.addresses.first_of_type("home").extended_address)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_city(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.city = "[Updated] " + address.city
         self.assertEqual("[Updated] Bremen", person.addresses.first_of_type("home").city)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_region(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.region = "[Updated] " + address.region
         self.assertEqual("[Updated] Land Bremen", person.addresses.first_of_type("home").region)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_postal_code(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.postal_code = "[Updated] " + address.postal_code
         self.assertEqual("[Updated] 28195", person.addresses.first_of_type("home").postal_code)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_country(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.country = "[Updated] " + address.country
         self.assertEqual("[Updated] Germany", person.addresses.first_of_type("home").country)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_country_code(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("home")
         address.country_code = "[Updated] " + address.country_code
         self.assertEqual("[Updated] DE", person.addresses.first_of_type("home").country_code)
-
         self.assertTrue(person.has_changes())
 
     def test_update_addresses_multiple_attributes(self):
-        person = TestPersonWrapperAddresses.read_fixture_tester_extensive()
-
+        person = self.read_fixture_tester_extensive()
         address = person.addresses.first_of_type("work")
 
         address.po_box = "[Updated] " + address.po_box
@@ -162,4 +143,19 @@ class TestPersonWrapperAddresses(tpb.FixtureMixin, unittest.TestCase):
         self.assertEqual("[Updated] Germany", person.addresses.first_of_type("work").country)
         self.assertEqual("[Updated] DE", person.addresses.first_of_type("work").country_code)
 
+        self.assertTrue(person.has_changes())
+
+    def test_append_address(self):
+        person = self.read_fixture_tester_extensive()
+        person.addresses.append_address("work", "New York")
+        addresses = list(person.addresses.all())
+        self.assertIsNotNone(addresses)
+        self.assertEqual(3, len(addresses))
+        self.assertEqual("New York", addresses[2].city)
+
+    def test_append_address_to_unset_list_attribute(self):
+        person = self.read_fixture_tester_empty()
+        person.addresses.append_address("home", "Lüneburg")
+        self.assertEqual(1, len(list(person.addresses.all())))
+        self.assertEqual("Lüneburg", person.addresses.first().city)
         self.assertTrue(person.has_changes())
