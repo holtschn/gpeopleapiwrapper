@@ -147,3 +147,11 @@ class TestPersonWrapperBase(FixtureMixin, unittest.TestCase):
         person = TestPersonWrapperBase.read_fixture_tester_blank_name_field_only()
         with self.assertRaises(base.FieldNotInMaskError):
             fail = person.email_addresses.append_email_address("HOME", "test@example.com")
+
+    def test_logging_name(self):
+        person = TestPersonWrapperBase.read_fixture_tester_average()
+        self.assertEqual("Eva Tester", person.logging_name)
+
+    def test_logging_name_of_empty(self):
+        person = TestPersonWrapperBase.read_fixture_tester_empty()
+        self.assertEqual("people/ni8aeJab4jah4ohm0cae", person.logging_name)
