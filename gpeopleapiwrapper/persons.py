@@ -627,10 +627,10 @@ class TypeListMixin(Generic[TypeWrapperT]):
         pass
 
     def first_of_type(self, vtype: str) -> Optional[TypeWrapperT]:
-        for item in self.all():
-            if item and item.vtype and item.vtype == vtype:
-                return item
-        return None
+        return next(iter(self.all_of_type(vtype)), None)
+
+    def all_of_type(self, vtype: str) -> Iterator[TypeWrapperT]:
+        return filter(lambda item: item and item.vtype and item.vtype == vtype, self.all())
 
     def remove_by_type(self,
                        vtype: str,
